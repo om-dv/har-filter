@@ -1,0 +1,43 @@
+{
+  "_comment": "Tier 1: known domain+path fingerprints, taken directly from Tracking Audit SOP v2.2 (Steps 1A, 1B, 3.5). Edit this file, not the script, when a new endpoint pattern turns up.",
+  "tier1": [
+    {"platform": "GA4", "match": ["google-analytics.com/g/collect", "analytics.google.com/g/collect", "analytics.google.com/g/s/collect", "stats.g.doubleclick.net/g/collect"]},
+    {"platform": "GA4 (legacy Universal Analytics)", "match": ["google-analytics.com/collect", "google-analytics.com/j/collect", "google-analytics.com/analytics.js"]},
+    {"platform": "GA4 Conversion Linker", "match": ["analytics.google.com/measurement/conversion", "analytics.google.com/measurement/1p-conversion", "google.co.uk/ads/ga-audiences", "google.com/ads/ga-audiences"]},
+    {"platform": "GTM", "match": ["googletagmanager.com/gtm.js", "googletagmanager.com/gtag/js"]},
+    {"platform": "Google Ads / DoubleClick", "match": ["googleadservices.com/pagead/conversion", "googleadservices.com/ccm/conversion", "google.com/pagead/conversion", "google.com/pagead/1p-conversion", "google.com/pagead/1p-user-list", "google.com/pagead/form-data", "google.com/pagead/id", "google.com/ccm/collect", "google.com/ccm/form-data", "google.com/rmkt/collect", "google.com/measurement/conversion", "googleads.g.doubleclick.net/pagead", "pagead2.googlesyndication.com/ccm/collect", "cm.g.doubleclick.net/pagead", "ad.doubleclick.net/ccm/s/collect"]},
+    {"platform": "Meta Pixel", "match": ["facebook.com/tr", "connect.facebook.net"]},
+    {"platform": "Microsoft Ads (UET)", "match": ["bat.bing.com", "c.bing.com"]},
+    {"platform": "TikTok", "match": ["analytics.tiktok.com/api/v2/pixel"]},
+    {"platform": "Snapchat", "match": ["tr.snapchat.com", "sc-static.net/scevent"]},
+    {"platform": "Pinterest", "match": ["ct.pinterest.com"]},
+    {"platform": "LinkedIn", "match": ["px.ads.linkedin.com"]},
+    {"platform": "Reddit", "match": ["alb.reddit.com"]},
+    {"platform": "X / Twitter", "match": ["t.co/i/adsct", "ads-twitter.com", "analytics.twitter.com"]},
+    {"platform": "Criteo", "match": ["criteo.com"]},
+    {"platform": "Klaviyo", "match": ["klaviyo.com", "trackcmp.net", "app-us1.com", "app-eu1.com"]},
+    {"platform": "Microsoft Clarity", "match": ["clarity.ms"]},
+    {"platform": "Hotjar", "match": ["hotjar.com", "hotjar.io"]},
+    {"platform": "Adform", "match": ["adform.net"]},
+    {"platform": "Outbrain", "match": ["outbrain.com"]},
+    {"platform": "Taboola", "match": ["taboola.com"]}
+  ],
+  "_comment2": "Tier 2: structural signatures used when a hit doesn't match any Tier 1 domain — catches first-party proxies, server-side GTM, and rewritten/obfuscated paths (see AQON PURE example: s.aqon-pure.com serving GA4/GTM via base64-encoded query params).",
+  "tier2_signatures": {
+    "GA4 (proxied/sGTM)": {"required_any": ["tid=g-", "tid=ua-"], "supporting": ["v=2", "en=", "cid=", "_p="]},
+    "GTM (proxied)": {"required_any": ["id=gtm-"], "supporting": ["gtm.js", "gtag/js"]},
+    "Google Ads (proxied/sGTM)": {"required_any": ["tid=aw-", "gclid="], "supporting": ["en=", "label="]},
+    "Meta (proxied/sGTM)": {"required_any": ["ev=pageview", "ev=purchase", "ev=lead", "ev=viewcontent", "ev=addtocart", "ev=initiatecheckout"], "supporting": ["id=", "cd["]}
+  },
+  "_comment3": "Tier 3: domain keyword fallback. Anything matching these keywords but not Tier 1/2 gets flagged for manual review instead of silently dropped or silently kept.",
+  "tier3_keywords": ["analytics", "pixel", "track", "collect", "conversion", "tag", "metric", "beacon", "telemetry", "insight", "sdk", "sync"],
+  "_comment4": "Known non-marketing noise seen repeatedly across real audits. Excluded from output entirely, but still counted in the domain summary so nothing vanishes silently.",
+  "excluded_noise_domains": [
+    "fonts.googleapis.com", "fonts.gstatic.com", "cloudflareinsights.com", "challenges.cloudflare.com",
+    "trustpilot.com", "widgets.trustedshops.com", "trstd-login.trustedshops.com", "customer-data-api.trstd-login.trustedshops.com",
+    "cdn-cookieyes.com", "log.cookieyes.com", "player.vimeo.com", "vimeo.com",
+    "maps.googleapis.com", "places.googleapis.com", "tawk.to", "embed.tawk.to",
+    "checkout.pci.shopifyinc.com", "pay.google.com", "gstatic.com", "cdnjs.cloudflare.com",
+    "cdn.jsdelivr.net", "fastly.net", "unpkg.com"
+  ]
+}
